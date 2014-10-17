@@ -1,0 +1,3 @@
+sku,stock_location,is_in_stock,qty,backorders
+SAMPLESKU,location_1,1,54,0
+,location_2,0,0,0
