@@ -140,6 +140,13 @@ class Demac_MultiLocationInventory_Block_Adminhtml_Location_Edit_Tab_Location ex
             'name'     => 'name',
         ));
 
+        $fieldset->addField('code', 'text', array(
+            'label'    => Mage::helper('demac_multilocationinventory')->__('Code'),
+            'class'    => 'required-entry',
+            'required' => true,
+            'name'     => 'code',
+        ));
+
         $fieldset->addField('external_id', 'text', array(
             'label'    => Mage::helper('demac_multilocationinventory')->__('External ID'),
             'required' => false,

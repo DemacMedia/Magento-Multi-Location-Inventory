@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Demac_MultiLocationInventory>
-            <version>1.2.4</version>
+            <version>1.2.5</version>
         </Demac_MultiLocationInventory>
     </modules>
     <global>
@@ -173,6 +173,14 @@
                     </multi_location_inventory_product_save>
                 </observers>
             </catalog_product_save_after>
+            <catalog_product_import_finish_before>
+                <observers>
+                    <multi_location_inventory_import>
+                        <class>Demac_MultiLocationInventory_Model_Importexport_Observer</class>
+                        <method>catalogProductImportFinishBefore</method>
+                    </multi_location_inventory_import>
+                </observers>
+            </catalog_product_import_finish_before>
         </events>
     </adminhtml>
     <default>
