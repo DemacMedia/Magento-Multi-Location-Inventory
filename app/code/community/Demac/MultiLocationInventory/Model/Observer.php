@@ -16,24 +16,25 @@ class Demac_MultiLocationInventory_Model_Observer
      */
     public function catalogProductCollectionApplyLimitationsBefore(Varien_Event_Observer $observer)
     {
-        $filters = $observer->getCategoryId();
-        if(isset($filters['visibility']) && !Mage::getStoreConfig('cataloginventory/options/show_out_of_stock')) {
-            $storeId = Mage::app()->getStore()->getId();
-            $observer->getCollection();
-            $selectFrom = $observer->getCollection()->getSelect()->getPart(Zend_Db_Select::FROM);
-            if(!isset($selectFrom['stock_status_index'])) {
-                $observer->getCollection()
-                    ->getSelect()
-                    ->join(
-                        array(
-                            'stock_status_index' => Mage::getSingleton('core/resource')->getTableName('demac_multilocationinventory/stock_status_index')
-                        ),
-                        'e.entity_id = stock_status_index.product_id' .
-                        ' AND stock_status_index.qty > 0' .
-                        ' AND stock_status_index.is_in_stock = 1' .
-                        ' AND stock_status_index.store_id = ' . $storeId,
-                        array()
-                    );
+        if ($collection = $observer->getCollection()) {
+            $filters = $collection->getLimitationFilters();
+            if(isset($filters['visibility']) && !Mage::getStoreConfig('cataloginventory/options/show_out_of_stock')) {
+                $storeId = Mage::app()->getStore()->getId();
+                $selectFrom = $collection->getSelect()->getPart(Zend_Db_Select::FROM);
+                if(!isset($selectFrom['stock_status_index'])) {
+                    $collection
+                        ->getSelect()
+                        ->join(
+                            array(
+                                'stock_status_index' => Mage::getSingleton('core/resource')->getTableName('demac_multilocationinventory/stock_status_index')
+                            ),
+                            'e.entity_id = stock_status_index.product_id' .
+                            ' AND stock_status_index.qty > 0' .
+                            ' AND stock_status_index.is_in_stock = 1' .
+                            ' AND stock_status_index.store_id = ' . $storeId,
+                            array()
+                        );
+                }
             }
         }
     }
