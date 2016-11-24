@@ -20,11 +20,7 @@ class Demac_MultiLocationInventory_Helper_Location extends Mage_Core_Helper_Abst
 
         $locationsCollection = Mage::getModel('demac_multilocationinventory/location')
             ->getCollection()
-            ->joinStockDataOnProductAndStoreView(false, $storeId);
-        $locationsCollection
-            ->getSelect()
-            ->group('main_table.id');
-
+            ->joinOnStoreView($storeId);
 
         $locationIds = $locationsCollection->getAllIds();
 

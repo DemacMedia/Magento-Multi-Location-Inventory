@@ -169,6 +169,37 @@ class Demac_MultiLocationInventory_Model_Resource_Location_Collection extends Ma
         return $this;
     }
 
+
+    /**
+     * Join location collection based on store view id .
+     *
+     * @param bool $storeViewId
+     *
+     * @return Demac_MultiLocationInventory_Model_Resource_Location_Collection
+     */
+    public function joinOnStoreView($storeViewId = false)
+    {
+        $this
+            ->getSelect()
+            ->join(
+                array(
+                    'stores' => Mage::getSingleton('core/resource')->getTableName('demac_multilocationinventory/stores')
+                ),
+                'main_table.id = stores.location_id',
+                array()
+            );
+
+        if($storeViewId) {
+
+            $this->addFieldToFilter('stores.store_id', $storeViewId);
+        }
+
+        $this->getSelect()->group('main_table.id');
+
+
+        return $this;
+    }
+
     /**
      * @return Varien_Data_Collection_Db
      */
