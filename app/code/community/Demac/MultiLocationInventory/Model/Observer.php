@@ -56,11 +56,12 @@ class Demac_MultiLocationInventory_Model_Observer
             $storeId = $order->getStoreId();
 
             $this->checkoutProducts = array();
-            $updatedProducts        = array();
             $quoteItems             = $observer->getEvent()->getQuote()->getAllItems();
 
             foreach ($quoteItems as $quoteItem) {
-                $updatedProducts[] = $quoteItem->getProductId();
+                $orderAsyncIndex = Mage::getModel('demac_multilocationinventory/order_asynchronous_index');
+                $orderAsyncIndex->setProductId($quoteItem->getProductId());
+                $orderAsyncIndex->save();
 
                 $children = $quoteItem->getChildrenItems();
                 if ($children) {
@@ -73,8 +74,6 @@ class Demac_MultiLocationInventory_Model_Observer
             }
 
             $this->removeStockFromLocations($order, $quote);
-
-            Mage::getModel('demac_multilocationinventory/indexer')->reindex($updatedProducts);
         }
     }
 
@@ -229,4 +228,19 @@ class Demac_MultiLocationInventory_Model_Observer
         }
     }
 
+    /**
+     * Index data at each order has to be done asynchronously to reduce order time on frontend
+     */
+    public function indexStockAfterOrder(){
+        //get All products to reindex
+        $productsToIndex = Mage::getModel('demac_multilocationinventory/order_asynchronous_index')->getCollection();
+        foreach($productsToIndex as $productToIndex){
+            $productsIds[] = $productToIndex->getProductId();
+            // remove ids from the table
+            $productToIndex->delete();
+        }
+        if (!empty($productsIds)) {
+            Mage::getModel('demac_multilocationinventory/indexer')->reindex($productsIds);
+        }
+    }
 }

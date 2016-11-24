@@ -2,7 +2,7 @@
 <config>
     <modules>
         <Demac_MultiLocationInventory>
-            <version>1.2.8</version>
+            <version>1.2.9</version>
         </Demac_MultiLocationInventory>
     </modules>
     <global>
@@ -72,6 +72,9 @@
                     <order_stock_source>
                         <table>demac_multilocationinventory_order_stock_source</table>
                     </order_stock_source>
+                    <order_asynchronous_index>
+                        <table>demac_multilocationinventory_order_asynchronous_index</table>
+                    </order_asynchronous_index>
                 </entities>
             </demac_multilocationinventory_resource>
             <cataloginventory>
@@ -117,6 +120,14 @@
             </demac_multilocationinventory_setup>
         </resources>
     </global>
+    <crontab>
+        <jobs>
+            <demac_multilocationinventory>
+                <schedule><cron_expr>*/1 * * * *</cron_expr></schedule>
+                <run><model>demac_multilocationinventory/observer::indexStockAfterOrder</model></run>
+            </demac_multilocationinventory>
+        </jobs>
+    </crontab>
     <frontend>
         <translate>
             <modules>
