@@ -23,6 +23,15 @@
                     </multi_location_inventory_import>
                 </observers>
             </catalog_product_import_finish_before>
+            <catalog_product_save_after>
+                <observers>
+                    <multi_location_inventory_product_save_on_import>
+                        <class>Demac_MultiLocationInventory_Model_Admin_Observer</class>
+                        <method>persistMLIIndexProductSaveOnImport</method>
+                        <import>1</import>
+                    </multi_location_inventory_product_save_on_import>
+                </observers>
+            </catalog_product_save_after>
         </events>
         <index>
             <indexer>
